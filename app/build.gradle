@@ -70,6 +70,7 @@ dependencies {
     implementation compose.foundationLayout
     implementation compose.uiToolingPreview
     implementation compose.constraintLayout
+   // implementation compose.preview
 
     implementation coil.img
     implementation coil.svg

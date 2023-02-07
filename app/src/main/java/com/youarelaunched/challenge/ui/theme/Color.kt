@@ -17,6 +17,7 @@ val LightColorsPalette = VendorAppColors(
     text = GraySecondary,
     textDark = GrayPrimary,
     textLight = Color.White,
+    textError = Green,
     buttonSelected = Green,
     buttonUnselected = Color.White,
     background = Background,
@@ -29,6 +30,7 @@ data class VendorAppColors(
     val text: Color,
     val textDark: Color,
     val textLight: Color,
+    val textError: Color,
 
     val buttonSelected: Color,
     val buttonUnselected: Color,
