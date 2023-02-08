@@ -1,6 +1,7 @@
 package com.youarelaunched.challenge.ui.screen.view
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,8 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.youarelaunched.challenge.data.repository.model.Vendor
 import com.youarelaunched.challenge.ui.screen.state.VendorsScreenUiState
+import com.youarelaunched.challenge.ui.screen.state.const.VendorsScreenConst
 import com.youarelaunched.challenge.ui.screen.view.components.*
 import com.youarelaunched.challenge.ui.theme.VendorAppTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun VendorsRoute(
@@ -24,19 +29,18 @@ fun VendorsRoute(
 
     VendorsScreen(uiState = uiState, onSearch = {
         viewModel.onSearch(it)
+    }, onSearchQueryUpdate = {
+        viewModel.onSearchQueryUpdate(it)
     })
 }
-
-private const val TAG = "VendorsScreen"
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VendorsScreen(
     uiState: VendorsScreenUiState,
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
+    onSearchQueryUpdate: (String) -> Unit
 ) {
-
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier
@@ -50,11 +54,7 @@ fun VendorsScreen(
                 .padding(16.dp, 24.dp, 16.dp, 0.dp)
         ) {
             SearchBar(onSearchClick = onSearch, onSearchQueryChanged = { query ->
-                onSearchQueryChanged(
-                    coroutineScope = coroutineScope,
-                    searchQuery = query,
-                    performAutoSearch = onSearch
-                )
+                onSearchQueryUpdate(query)
             })
 
             Spacer(modifier = Modifier.padding(vertical = 16.dp))
@@ -67,7 +67,6 @@ fun VendorsScreen(
         }
     }
 }
-
 
 @Composable
 private fun VendorsList(vendorsList: List<Vendor>) {

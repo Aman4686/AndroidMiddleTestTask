@@ -17,9 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.youarelaunched.challenge.middle.R
 import com.youarelaunched.challenge.ui.screen.state.const.VendorsScreenConst
 import com.youarelaunched.challenge.ui.theme.VendorAppTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 private const val TAG = "SearchBar"
 
@@ -75,20 +72,5 @@ fun SearchBar(
                     }
                 }
             })
-    }
-}
-
-fun onSearchQueryChanged(
-    coroutineScope: CoroutineScope,
-    searchQuery: String,
-    performAutoSearch: (String) -> Unit
-) {
-    Log.d(TAG, "observeSearchQuery: $searchQuery")
-    if (searchQuery.length >= VendorsScreenConst.AUTO_SEARCH_MIN_WORD_LENGTH) {
-        coroutineScope.launch {
-            delay(VendorsScreenConst.AUTO_SEARCH_DELAY_MS)
-            Log.d(TAG, "start auto search by query: $searchQuery")
-            performAutoSearch(searchQuery)
-        }
     }
 }

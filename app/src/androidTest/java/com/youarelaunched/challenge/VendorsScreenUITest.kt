@@ -29,12 +29,13 @@ class VendorsScreenUITest {
     @Test
     fun When_vendors_list_is_empty_NoResult_screen_must_be_visible() {
         // Given: a VendorsScreenUiState instance
-        val uiState = VendorsScreenUiState(vendors = null)
+        val uiState = VendorsScreenUiState(vendors = null, searchQuery = "")
         composeTestRule.setContent {
             VendorAppTheme {
                 VendorsScreen(
                     uiState = uiState,
-                    onSearch = {}
+                    onSearch = {},
+                    onSearchQueryUpdate = {}
                 )
             }
         }
@@ -56,12 +57,13 @@ class VendorsScreenUITest {
     @Test
     fun When_vendors_list_is_not_empty_at_least_one_item_is_visible() {
         // Given: a VendorsScreenUiState instance
-        val uiState = VendorsScreenUiState(vendors = fakeVendorList)
+        val uiState = VendorsScreenUiState(vendors = fakeVendorList, searchQuery = "")
         composeTestRule.setContent {
             VendorAppTheme {
                 VendorsScreen(
                     uiState = uiState,
-                    onSearch = {}
+                    onSearch = {},
+                    onSearchQueryUpdate = {}
                 )
             }
         }
