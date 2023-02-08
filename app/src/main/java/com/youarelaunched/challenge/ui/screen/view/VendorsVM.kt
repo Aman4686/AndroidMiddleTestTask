@@ -16,6 +16,7 @@ private const val TAG = "VendorsVM"
 @HiltViewModel
 class VendorsVM @Inject constructor(
     private val repository: VendorsRepository
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -26,14 +27,14 @@ class VendorsVM @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        getVendors(searchQuery = "")
+        getVendors()
     }
 
     fun onSearch(searchQuery: String) {
         getVendors(searchQuery)
     }
 
-    private fun getVendors(searchQuery: String) {
+    fun getVendors(searchQuery: String = "") {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(

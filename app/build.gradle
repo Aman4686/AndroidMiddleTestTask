@@ -84,6 +84,7 @@ dependencies {
 
     androidTestImplementation androidXTest.runner
     androidTestImplementation androidXTest.rules
+    androidTestImplementation androidXTest.core
     androidTestImplementation composeTest.uiTestJunit
     debugImplementation composeTest.uiTestManifest
 

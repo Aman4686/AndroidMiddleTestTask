@@ -91,7 +91,8 @@ buildscript {
         androidXTestRulesVersion = "1.5.0"
         androidXTest = [
                 runner: "androidx.test:runner:$androidXTestRunnerVersion",
-                rules : "androidx.test:rules:$androidXTestRulesVersion"
+                rules : "androidx.test:rules:$androidXTestRulesVersion",
+                core : "androidx.test:core:$androidXTestRulesVersion"
         ]
         composeTestVersion = "1.3.3"
         composeTest = [
