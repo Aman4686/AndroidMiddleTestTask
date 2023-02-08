@@ -1,39 +1,35 @@
 package com.youarelaunched.challenge.ui.screen.view.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.youarelaunched.challenge.middle.R
-import com.youarelaunched.challenge.ui.screen.view.VendorsVM
+import com.youarelaunched.challenge.ui.screen.state.const.VendorsScreenConst
 import com.youarelaunched.challenge.ui.theme.VendorAppTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+private const val TAG = "SearchBar"
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    onSearch: (String) -> Unit
+    onSearchClick: (String) -> Unit,
+    onSearchQueryChanged: (String) -> Unit
 ) {
-    var value by remember {
+    var searchQuery by remember {
         mutableStateOf("")
     }
 
@@ -44,8 +40,14 @@ fun SearchBar(
         shape = MaterialTheme.shapes.medium
     ) {
         BasicTextField(
-            value = value,
-            onValueChange = { value = it },
+            value = searchQuery,
+            onValueChange = {
+                searchQuery = it
+                onSearchQueryChanged(it)
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearchClick(searchQuery) }),
             textStyle = MaterialTheme.typography.subtitle2,
             decorationBox = { innerTextField ->
                 Row(
@@ -55,16 +57,16 @@ fun SearchBar(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
-                        if (value.isEmpty()) {
+                        if (searchQuery.isEmpty()) {
                             Text(
-                                text = "Search...",
+                                text = stringResource(R.string.search_bar_hint),
                                 style = MaterialTheme.typography.subtitle2.copy(color = VendorAppTheme.colors.text)
                             )
                         }
                         innerTextField()
                     }
                     IconButton(onClick = {
-                        onSearch(value)
+                        onSearchClick(searchQuery)
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_search),
@@ -73,5 +75,20 @@ fun SearchBar(
                     }
                 }
             })
+    }
+}
+
+fun onSearchQueryChanged(
+    coroutineScope: CoroutineScope,
+    searchQuery: String,
+    performAutoSearch: (String) -> Unit
+) {
+    Log.d(TAG, "observeSearchQuery: $searchQuery")
+    if (searchQuery.length >= VendorsScreenConst.AUTO_SEARCH_MIN_WORD_LENGTH) {
+        coroutineScope.launch {
+            delay(VendorsScreenConst.AUTO_SEARCH_DELAY_MS)
+            Log.d(TAG, "start auto search by query: $searchQuery")
+            performAutoSearch(searchQuery)
+        }
     }
 }

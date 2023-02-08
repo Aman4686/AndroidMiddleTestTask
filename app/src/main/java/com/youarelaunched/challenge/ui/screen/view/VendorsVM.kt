@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "VendorsVM"
+
 @HiltViewModel
 class VendorsVM @Inject constructor(
     private val repository: VendorsRepository
@@ -24,17 +26,20 @@ class VendorsVM @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        getVendors()
+        getVendors(searchQuery = "")
     }
 
-    fun getVendors() {
+    fun onSearch(searchQuery: String) {
+        getVendors(searchQuery)
+    }
+
+    private fun getVendors(searchQuery: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    vendors = repository.getVendors()
+                    vendors = repository.getVendors(searchQuery)
                 )
             }
         }
     }
-
 }

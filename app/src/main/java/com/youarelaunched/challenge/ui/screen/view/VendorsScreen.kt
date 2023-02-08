@@ -8,15 +8,12 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
 import com.youarelaunched.challenge.data.repository.model.Vendor
 import com.youarelaunched.challenge.ui.screen.state.VendorsScreenUiState
-import com.youarelaunched.challenge.ui.screen.view.components.ChatsumerSnackbar
-import com.youarelaunched.challenge.ui.screen.view.components.NoResult
-import com.youarelaunched.challenge.ui.screen.view.components.SearchBar
-import com.youarelaunched.challenge.ui.screen.view.components.VendorItem
+import com.youarelaunched.challenge.ui.screen.view.components.*
 import com.youarelaunched.challenge.ui.theme.VendorAppTheme
 
 @Composable
@@ -25,14 +22,22 @@ fun VendorsRoute(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    VendorsScreen(uiState = uiState)
+    VendorsScreen(uiState = uiState, onSearch = {
+        viewModel.onSearch(it)
+    })
 }
+
+private const val TAG = "VendorsScreen"
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VendorsScreen(
-    uiState: VendorsScreenUiState
+    uiState: VendorsScreenUiState,
+    onSearch: (String) -> Unit
 ) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -44,7 +49,14 @@ fun VendorsScreen(
                 .fillMaxSize()
                 .padding(16.dp, 24.dp, 16.dp, 0.dp)
         ) {
-            SearchBar(onSearch = {},)
+            SearchBar(onSearchClick = onSearch, onSearchQueryChanged = { query ->
+                onSearchQueryChanged(
+                    coroutineScope = coroutineScope,
+                    searchQuery = query,
+                    performAutoSearch = onSearch
+                )
+            })
+
             Spacer(modifier = Modifier.padding(vertical = 16.dp))
 
             if (uiState.vendors.isNullOrEmpty()) {
@@ -55,6 +67,7 @@ fun VendorsScreen(
         }
     }
 }
+
 
 @Composable
 private fun VendorsList(vendorsList: List<Vendor>) {

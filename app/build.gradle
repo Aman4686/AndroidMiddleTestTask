@@ -54,6 +54,10 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
@@ -70,7 +74,18 @@ dependencies {
     implementation compose.foundationLayout
     implementation compose.uiToolingPreview
     implementation compose.constraintLayout
-   // implementation compose.preview
+
+    testImplementation junit.lib
+
+    testImplementation kotlinXCoroutinesTest.lib
+
+    testImplementation mockk.lib
+    testImplementation mockk.agent
+
+    androidTestImplementation androidXTest.runner
+    androidTestImplementation androidXTest.rules
+    androidTestImplementation composeTest.uiTestJunit
+    debugImplementation composeTest.uiTestManifest
 
     implementation coil.img
     implementation coil.svg
