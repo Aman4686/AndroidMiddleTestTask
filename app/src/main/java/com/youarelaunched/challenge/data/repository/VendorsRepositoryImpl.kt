@@ -11,7 +11,7 @@ import javax.inject.Inject
 import kotlin.text.Typography.bullet
 
 class VendorsRepositoryImpl @Inject constructor(
-    @DispatcherIo private val workDispatcher: CoroutineDispatcher,
+    @DispatcherIo val workDispatcher: CoroutineDispatcher,
     private val api: ApiVendors
 ) : VendorsRepository {
 

@@ -1,21 +1,13 @@
 package com.youarelaunched.challenge
 
-import androidx.compose.animation.defaultDecayAnimationSpec
-import com.youarelaunched.challenge.data.network.api.ApiVendors
 import com.youarelaunched.challenge.data.repository.VendorsRepository
 import com.youarelaunched.challenge.data.repository.VendorsRepositoryImpl
 import com.youarelaunched.challenge.data.repository.model.Vendor
 import com.youarelaunched.challenge.ui.screen.view.VendorsVM
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.*
-import okhttp3.WebSocketListener
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -30,19 +22,19 @@ class VendorVMTest {
     @Test
     fun `getVendors return not empty list`() = runTest {
         // Given: a VendorsRepository mocked instance
-        val vendorsRepository = mockk<VendorsRepository>()
+        val vendorsRepository = mockk<VendorsRepositoryImpl>()
         coEvery { vendorsRepository.getVendors(any()) } returns fakeVendorList
 
         // And: VendorsVM instance
         val vendorsViewModel = VendorsVM(vendorsRepository)
 
         // When: getVendors is called
-        vendorsViewModel.getVendors()
+        vendorsViewModel.onSearchForVendors("")
         advanceUntilIdle()
 
         // Then: the Vendors list in not empty and not null
-        val result = vendorsViewModel.uiState.value.vendors
-        assert(!result.isNullOrEmpty())
+        val result = vendorsViewModel.state.value.vendors
+        assert(result.isNotEmpty())
 
     }
 
@@ -56,12 +48,12 @@ class VendorVMTest {
         val vendorsViewModel = VendorsVM(vendorsRepository)
 
         // When: getVendors is called
-        vendorsViewModel.getVendors()
+        vendorsViewModel.onSearchForVendors("")
         advanceUntilIdle()
 
         // Then: the Vendors list in empty or null
-        val result = vendorsViewModel.uiState.value.vendors
-        assert(result.isNullOrEmpty())
+        val result = vendorsViewModel.state.value.vendors
+        assert(result.isEmpty())
     }
 
     private fun createFakeVendorsList(): List<Vendor>{

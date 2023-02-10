@@ -6,15 +6,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import com.youarelaunched.challenge.data.repository.VendorsRepository
 import com.youarelaunched.challenge.middle.R
 import com.youarelaunched.challenge.data.repository.model.Vendor
-import com.youarelaunched.challenge.ui.screen.state.VendorsScreenUiState
+import com.youarelaunched.challenge.ui.screen.state.VendorsScreenViewState
 import com.youarelaunched.challenge.ui.screen.view.VendorsScreen
-import com.youarelaunched.challenge.ui.screen.view.VendorsVM
 import com.youarelaunched.challenge.ui.theme.VendorAppTheme
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 
@@ -29,7 +25,7 @@ class VendorsScreenUITest {
     @Test
     fun When_vendors_list_is_empty_NoResult_screen_must_be_visible() {
         // Given: a VendorsScreenUiState instance
-        val uiState = VendorsScreenUiState(vendors = null, searchQuery = "")
+        val uiState = VendorsScreenViewState(vendors = null, searchQuery = "")
         composeTestRule.setContent {
             VendorAppTheme {
                 VendorsScreen(
@@ -57,7 +53,7 @@ class VendorsScreenUITest {
     @Test
     fun When_vendors_list_is_not_empty_at_least_one_item_is_visible() {
         // Given: a VendorsScreenUiState instance
-        val uiState = VendorsScreenUiState(vendors = fakeVendorList, searchQuery = "")
+        val uiState = VendorsScreenViewState(vendors = fakeVendorList, searchQuery = "")
         composeTestRule.setContent {
             VendorAppTheme {
                 VendorsScreen(
